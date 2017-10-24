@@ -1,0 +1,29 @@
+{
+  "name": "chat-app-heroku",
+  "version": "1.0.0",
+  "description": "A node chat app to learn Socket.io",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "8.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Puppo/node-chat-app-heroku.git"
+  },
+  "author": "Luca Del Puppo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Puppo/node-chat-app-heroku/issues"
+  },
+  "homepage": "https://github.com/Puppo/node-chat-app-heroku#readme",
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
