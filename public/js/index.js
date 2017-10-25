@@ -46,6 +46,7 @@ btnLocation.on('click', function(e) {
     return alert('Geolocation not supported by your browser.');
   }
 
+  btnLocation.attr('disabled', 'disabled').text('Sending location');
   let bestPosition, geolocationWatchID;
 
   const fetchLocation = function(position) {
@@ -59,6 +60,8 @@ btnLocation.on('click', function(e) {
       socket.emit('createLocationMessage', {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
+      }, function() {
+        btnLocation.removeAttr('disabled').text('Send location');
       });
     }
   };
@@ -72,6 +75,7 @@ btnLocation.on('click', function(e) {
     };
     geolocationWatchID = navigator.geolocation.watchPosition(fetchLocation, null, geo_options);
   }, function(e) {
+    btnLocation.removeAttr('disabled').text('Send location');
     alert('Unable to fetch location.');
   });
 });
