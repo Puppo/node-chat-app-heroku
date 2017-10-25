@@ -103,6 +103,10 @@ btnLocation.on('click', function(e) {
     }
   };
 
+  var fetchLocationError = function(err) {
+    console.error(err);
+  }
+
   navigator.geolocation.getCurrentPosition(function(position) {
     bestPosition = position;
     var geo_options = {
@@ -110,7 +114,7 @@ btnLocation.on('click', function(e) {
       maximumAge        : 30000, 
       timeout           : 27000
     };
-    geolocationWatchID = navigator.geolocation.watchPosition(fetchLocation, null, geo_options);
+    geolocationWatchID = navigator.geolocation.watchPosition(fetchLocation, fetchLocationError, geo_options);
   }, function(e) {
     btnLocation.removeAttr('disabled').text('Send location');
     alert('Unable to fetch location.');
