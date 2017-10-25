@@ -15,6 +15,7 @@ const publicPath = path.join(__dirname, '../public');
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
+const users = new Users();
 
 app.use(express.static(publicPath));
 
@@ -27,12 +28,10 @@ io.on('connection', (socket) => {
     }
 
     socket.join(params.room);
-    // socket.leave(params.room);
+    users.remove(socket.id);
+    users.add(socket.id, params.name, params.room);
 
-    // io.emit -> io.to('The Office Fans').emit
-    // socket.broadcast.emit -> socket.broadcast.to('The Office Fans').emit
-    // socket.emit
-
+    io.to(params.room).emit('updateUserList', users.getUserList(params.room));
     socket.emit('newMessage', generateMessage('Admin', `Welcome to the chat app, in the room ${params.room}`));
     socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has join.`));
 
@@ -51,8 +50,13 @@ io.on('connection', (socket) => {
     callback();
   });
 
-  socket.on('disconnect', (socket) => {
-    console.log('User was disconnected');
+  socket.on('disconnect', () => {
+    const user = users.remove(socket.id);
+
+    if (user) {
+      io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+      io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`));
+    }
   });
 });
 
