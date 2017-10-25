@@ -9,19 +9,21 @@ socket.on('disconnect', function() {
 });
 
 socket.on('newMessage', function(message) {
-  const li = $('<li></li>');
-  li.text(`${message.from}: ${message.text}`);
+  var formattedTime = moment(message.createAt).format('h:mm a');
+  var li = $('<li></li>');
+  li.text(`${message.from} ${formattedTime}: ${message.text}`);
 
   $('#messages').append(li);
 });
 
 socket.on('newLocationMessage', function(message) {
-  const a = $('<a></a>')
+  var formattedTime = moment(message.createAt).format('h:mm a');
+  var a = $('<a></a>')
             .text('My current location')
             .attr('target', '_blank')
             .attr('href', message.url);
-  const li = $('<li></li>')
-            .text(`${message.from}: `)
+  var li = $('<li></li>')
+            .text(`${message.from} ${formattedTime}: `)
             .append(a);
 
   $('#messages').append(li);
@@ -30,7 +32,7 @@ socket.on('newLocationMessage', function(message) {
 $('#message-form').on('submit', function(e) {
   e.preventDefault();
 
-  const txtMessage =  $('[name=message]');
+  var txtMessage =  $('[name=message]');
 
   socket.emit('createMessage', {
     from: 'User',
@@ -40,7 +42,7 @@ $('#message-form').on('submit', function(e) {
   });
 });
 
-const btnLocation = $('#send-location');
+var btnLocation = $('#send-location');
 btnLocation.on('click', function(e) {
   if (!navigator.geolocation) {
     return alert('Geolocation not supported by your browser.');
@@ -49,7 +51,7 @@ btnLocation.on('click', function(e) {
   btnLocation.attr('disabled', 'disabled').text('Sending location');
   let bestPosition, geolocationWatchID;
 
-  const fetchLocation = function(position) {
+  var fetchLocation = function(position) {
     if (!bestPosition || bestPosition.coords.accuracy > position.coords.accuracy) {
       bestPosition = position;
     }
