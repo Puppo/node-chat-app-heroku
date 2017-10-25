@@ -94,6 +94,7 @@ btnLocation.on('click', function(e) {
     // wifi problem get accuracy geolocation
     if (bestPosition.coords.accuracy <= 40000) {
       navigator.geolocation.clearWatch(geolocationWatchID);
+      geolocationWatchID = undefined;
       socket.emit('createLocationMessage', {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
@@ -115,6 +116,18 @@ btnLocation.on('click', function(e) {
       timeout           : 27000
     };
     geolocationWatchID = navigator.geolocation.watchPosition(fetchLocation, fetchLocationError, geo_options);
+    setTimeout(function() {
+      if (geolocationWatchID) {
+        navigator.geolocation.clearWatch(geolocationWatchID);
+        geolocationWatchID = undefined;
+        socket.emit('createLocationMessage', {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        }, function() {
+          btnLocation.removeAttr('disabled').text('Send location');
+        });
+      }
+    }, 10000);
   }, function(e) {
     btnLocation.removeAttr('disabled').text('Send location');
     alert('Unable to fetch location.');
